@@ -38,12 +38,25 @@ export default function LiveMonitor({ image, images, onNavigate }) {
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 1.03 }}
             transition={{ duration: 0.5, ease: "easeOut" }}
-            className="flex h-full w-full items-center justify-center"
+            drag="x"
+            dragConstraints={{ left: 0, right: 0 }}
+            dragElastic={0.7}
+            onDragEnd={(e, { offset }) => {
+              const swipe = offset.x;
+              // Swipe Left -> Go Right (older/index+1)
+              if (swipe < -60 && canGoRight) {
+                handleGoRight();
+              // Swipe Right -> Go Left (newer/index-1)
+              } else if (swipe > 60 && canGoLeft) {
+                handleGoLeft();
+              }
+            }}
+            className="flex h-full w-full items-center justify-center cursor-grab active:cursor-grabbing"
           >
             <img
               src={`/api/image/${image.id}`}
               alt={image.name}
-              className="h-full w-full object-contain"
+              className="h-full w-full object-contain pointer-events-none"
             />
           </motion.div>
         </AnimatePresence>
