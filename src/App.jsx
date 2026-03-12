@@ -10,6 +10,7 @@ import DetailedPreview from './components/DetailedPreview';
 
 function App() {
   const [view, setView] = useState(() => {
+    if (window.innerWidth < 768) return 'gallery';
     return new URLSearchParams(window.location.search).get('view') || 'live';
   });
   const [selectedImage, setSelectedImage] = useState(null);
@@ -45,6 +46,7 @@ function App() {
             label="Live Monitor" 
             active={view === 'live'} 
             onClick={() => setView('live')}
+            hideOnMobile
           />
           <SidebarNavItem 
             icon={<Grid size={22} />} 
@@ -129,9 +131,9 @@ function App() {
 }
 
 // Nav rail item: icon only, with tooltip on hover
-function SidebarNavItem({ icon, label, active, onClick }) {
+function SidebarNavItem({ icon, label, active, onClick, hideOnMobile }) {
   return (
-    <div className="relative group">
+    <div className={`relative group ${hideOnMobile ? 'hidden md:block' : ''}`}>
       <button
         onClick={onClick}
         className={`flex items-center justify-center w-12 h-12 rounded-2xl transition-all duration-200
@@ -143,7 +145,7 @@ function SidebarNavItem({ icon, label, active, onClick }) {
         {icon}
       </button>
       {/* Tooltip */}
-      <div className="absolute left-full ml-3 top-1/2 -translate-y-1/2 px-3 py-1.5 bg-slate-900 text-white text-xs font-bold rounded-lg opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity whitespace-nowrap z-[70] border border-white/10 shadow-xl">
+      <div className="absolute left-full ml-3 top-1/2 -translate-y-1/2 px-3 py-1.5 bg-slate-900 text-white text-xs font-bold rounded-lg opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity whitespace-nowrap z-[70] border border-white/10 shadow-xl hidden md:block">
         {label}
       </div>
     </div>

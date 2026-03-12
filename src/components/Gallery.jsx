@@ -58,9 +58,10 @@ export default function Gallery({ images, onSelect }) {
             <img 
               src={`/api/image/${img.id}`} 
               alt={img.name}
-              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+              className="w-full h-full object-cover transition-transform duration-500 md:group-hover:scale-110"
             />
-            <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-4">
+            {/* Desktop Hover Overlay */}
+            <div className="absolute inset-0 bg-black/40 opacity-0 md:group-hover:opacity-100 transition-opacity hidden md:flex items-center justify-center gap-4">
               <button className="p-3 bg-white/20 backdrop-blur-md rounded-full text-white hover:bg-white/40 transition-colors">
                 <Eye size={20} />
               </button>
@@ -73,6 +74,16 @@ export default function Gallery({ images, onSelect }) {
                 <Download size={20} />
               </a>
             </div>
+
+            {/* Mobile Always-Visible Download Button */}
+            <a 
+              href={`/api/download/${img.id}`} 
+              download={img.name}
+              onClick={(e) => e.stopPropagation()}
+              className="absolute top-2 right-2 p-2 bg-black/40 backdrop-blur-md rounded-full text-white md:hidden shadow-lg border border-white/10 active:scale-90"
+            >
+              <Download size={16} />
+            </a>
             <div className="absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-black/80 to-transparent">
                <p className="text-[10px] text-white/60 truncate">{new Date(img.createdTime).toLocaleString()}</p>
             </div>
