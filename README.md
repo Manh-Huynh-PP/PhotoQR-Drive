@@ -68,7 +68,10 @@ PORT=3001
 
 ## 🛠️ Chạy ứng dụng
 
-Dự án này cần chạy đồng thời cả Server Backend (đảm nhận việc truy vấn bảo mật với Google Drive mà không làm lộ key ra trình duyệt) và Frontend Vite dev server (đảm nhận hiển thị).
+> [!IMPORTANT]
+> Dự án này **BẮT BUỘC** phải chạy qua Server Backend (`server.js`) vì Google Drive API yêu cầu khóa bảo mật. Hình ảnh hiển thị trên app thực chất là dữ liệu được Backend tải về từ Drive và feed ngược lại cho app ở local, qua đó bảo vệ hoàn toàn Service Account Key của bạn. Không nên gọi trực tiếp Google Drive API từ Frontend (React/Vite).
+
+Dự án này cần chạy đồng thời cả Server Backend và Frontend Vite dev server (đạt hiệu năng cao nhất trên localhost).
 
 **Bật Backend Server:**
 ```bash
@@ -94,7 +97,20 @@ Sau đó, bạn có thể chạy backend server, nó sẽ tự động host và 
 ```bash
 NODE_ENV=production npm run server
 ```
-Truy cập `http://localhost:3001` trên trình duyệt.
+Truy cập `http://localhost:3001` trên trình duyệt để sử dụng. Tại thời điểm này bạn không cần chạy `npm run dev` nữa.
+
+## 🚀 Đưa lên Hosting (Vercel, Render, Railway, v.v)
+
+Bởi vì ứng dụng có cả Frontend tĩnh và một file Node.js Backend (`server.js`) chạy chung cổng, cách tốt nhất để host là sử dụng các nền tảng hỗ trợ **Web Service (Node.js/Express)** thay vì chỉ host Frontend.
+
+Ví dụ, triển khai trên **Render** hoặc **Railway**:
+1. Đăng nhập và tạo một **Web Service** mới, liên kết với repo GitHub này.
+2. Nạp cấu hình **Environment Variables** (Sao chép y hệt nội dung file `.env` local của bạn, bao gồm cả chuỗi JSON của key nếu public platform hỗ trợ chứa file json, hoặc copy y hệt `FOLDER_ID`).
+3. Build command: `npm install && npm run build`
+4. Start command: `npm run server`
+
+Trường hợp nền tảng hosting **không cho phép up file JSON (VD: Vercel serverless)**: 
+Cấu trúc app hiện tại chạy trên nền Express server (`server.js`). Nếu bạn dùng Vercel, bạn cần phải cấu hình lại `vercel.json` để Serverless Function đọc `server.js`, đồng thời config đọc Google Credentials qua biến môi trường dạng string Encode Base64 thay vì đọc file JSON thật. Nguyên bản source code này được tối ưu để **chạy Local tại sự kiện** hoặc **Host trên nền tảng support NodeJS liên tục (VPS, Render, Railway, DigitalOcean App, Heroku)**.
 
 ## 🔒 Lưu ý bảo mật
 - Tuyệt đối **KHÔNG commit** file chứa key `service-account-key.json` hay file `.env` lên GitHub. Trong source code file `.gitignore` đã khai báo chặn 2 định dạng này.
@@ -167,7 +183,10 @@ PORT=3001
 
 ## 🛠️ Running the Application
 
-This project requires both a backend server (to securely query Google Drive without leaking your secret key to the browser) and a frontend Vite development server.
+> [!IMPORTANT]
+> The **Server Backend (`server.js`) is MANDATORY** for this application to work safely. The App UI does not talk directly to Google Drive. The Backend streams the images to the App UI, preventing your Google Service Account Keys from ever being exposed to the users' web browsers.
+
+This project requires both a backend server and a frontend Vite development server running.
 
 **Start the Backend Server:**
 ```bash
@@ -193,7 +212,20 @@ Then, you can run the backend server which will automatically serve the built st
 ```bash
 NODE_ENV=production npm run server
 ```
-Visit `http://localhost:3001` in your browser.
+Visit `http://localhost:3001` in your browser. At this point, you do not need the Vite dev server (`npm run dev`) anymore.
+
+## 🚀 Deployment (Hosting)
+
+Because this app uses an Express backend (`server.js`) to securely load from Google Drive and serve the React build, you must host it on a platform that supports **Node.js Web Services** (not just static site hosting).
+
+Recommended platforms: **Render, Railway, Heroku, DigitalOcean App Platform** or a VPS.
+
+1. Connect your Github Repo.
+2. Set Build Command to: `npm install && npm run build`
+3. Set Start Command to: `npm run server`
+4. Add your **Environment Variables**: Copy everything from your local `.env`. 
+
+*Note: For serverless platforms like **Vercel**, deploying this out of the box will require modifying `vercel.json` to treat `server.js` as an API route, and encoding the Service Account JSON into a single string environment variable, as Vercel doesn't process local file uploads easily. The app is highly optimized to run locally at the event or on continuous Node.js servers.*
 
 ## 🔒 Security Notes
 - Never commit your `service-account-key.json` or `.env` files to GitHub. The `.gitignore` is pre-configured to exclude these.
