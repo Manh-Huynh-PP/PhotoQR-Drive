@@ -43,7 +43,7 @@ npm run server
 # Terminal 2: Bật Frontend React (Tự động mở cổng mạng LAN --host)
 npm run dev
 ```
-> **Mẹo:** Vite sẽ cung cấp một đường link **Network** (vd: `http://192.168.x.x:5173`). Gửi link này cho khách xem hoặc mở trên iPad/Điện thoại chung mạng Wi-Fi.
+> **Mẹo:** Vite sẽ cung cấp một đường link **Network** (vd: `http://192.168.x.x:5173`). Dùng đường link này hiển thị trên màn hình Monitor chính để khách xem ảnh theo thời gian thực và có thể quét mã QR (nếu bạn có tích hợp) tải ảnh về điện thoại. Khách cùng mạng Wi-Fi cũng có thể tự mở link trên điện thoại cá nhân.
 
 ### 4. Triển khai (Deploy / Hosting)
 Web dùng NodeJS làm backend (`server.js`) để bảo mật. Hãy host code trên các nền tảng hỗ trợ **Node.js Web Service** như Render, Railway, DigitalOcean, VPS.
