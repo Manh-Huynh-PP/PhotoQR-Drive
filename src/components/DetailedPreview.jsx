@@ -8,17 +8,17 @@ export default function DetailedPreview({ image, images = [], onNavigate, onClos
   if (!image) return null;
 
   const currentIndex = images.findIndex(img => img.id === image.id);
-  const hasPrev = currentIndex < images.length - 1; // prev is older
-  const hasNext = currentIndex > 0; // next is newer
+  const canGoRight = currentIndex < images.length - 1; // right goes deeper (older)
+  const canGoLeft = currentIndex > 0; // left goes back to start (newer)
 
-  const handlePrev = (e) => {
+  const handleGoLeft = (e) => {
     e?.stopPropagation();
-    if (hasPrev && onNavigate) onNavigate(images[currentIndex + 1]);
+    if (canGoLeft && onNavigate) onNavigate(images[currentIndex - 1]);
   };
 
-  const handleNext = (e) => {
+  const handleGoRight = (e) => {
     e?.stopPropagation();
-    if (hasNext && onNavigate) onNavigate(images[currentIndex - 1]);
+    if (canGoRight && onNavigate) onNavigate(images[currentIndex + 1]);
   };
 
   return (
@@ -50,10 +50,12 @@ export default function DetailedPreview({ image, images = [], onNavigate, onClos
               dragElastic={0.7}
               onDragEnd={(e, { offset }) => {
                 const swipe = offset.x; 
-                if (swipe < -50 && hasNext) {
-                  handleNext();
-                } else if (swipe > 50 && hasPrev) {
-                  handlePrev();
+                // Swipe Left -> Next item (Right)
+                if (swipe < -50 && canGoRight) {
+                  handleGoRight();
+                // Swipe Right -> Prev item (Left)
+                } else if (swipe > 50 && canGoLeft) {
+                  handleGoLeft();
                 }
               }}
               className="absolute inset-0 flex items-center justify-center p-4 md:p-0 cursor-grab active:cursor-grabbing"
@@ -86,20 +88,20 @@ export default function DetailedPreview({ image, images = [], onNavigate, onClos
           </motion.div>
 
           {/* Navigation Arrows */}
-          {hasPrev && (
+          {canGoLeft && (
             <button
-              onClick={handlePrev}
+              onClick={handleGoLeft}
               className="absolute left-2 md:left-4 top-1/2 -translate-y-1/2 z-40 p-2 md:p-3 bg-black/40 hover:bg-white/20 backdrop-blur-xl border border-white/10 text-white rounded-full transition-all hover:scale-110 cursor-pointer"
-              title="Previous (Older)"
+              title="Previous"
             >
               <ChevronLeft size={28} className="w-5 h-5 md:w-7 md:h-7" />
             </button>
           )}
-          {hasNext && (
+          {canGoRight && (
             <button
-              onClick={handleNext}
+              onClick={handleGoRight}
               className="absolute right-2 md:right-4 top-1/2 -translate-y-1/2 z-40 p-2 md:p-3 bg-black/40 hover:bg-white/20 backdrop-blur-xl border border-white/10 text-white rounded-full transition-all hover:scale-110 cursor-pointer"
-              title="Next (Newer)"
+              title="Next"
             >
               <ChevronRight size={28} className="w-5 h-5 md:w-7 md:h-7" />
             </button>

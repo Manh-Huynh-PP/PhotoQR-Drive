@@ -14,17 +14,17 @@ export default function LiveMonitor({ image, images, onNavigate }) {
   }
 
   const currentIndex = images.findIndex(img => img.id === image.id);
-  const hasPrev = currentIndex < images.length - 1;
-  const hasNext = currentIndex > 0;
+  const canGoRight = currentIndex < images.length - 1; // right goes deeper (older)
+  const canGoLeft = currentIndex > 0; // left goes back to start (newer)
 
-  const handlePrev = (e) => {
+  const handleGoLeft = (e) => {
     e.stopPropagation();
-    if (hasPrev) onNavigate(images[currentIndex + 1]);
+    if (canGoLeft) onNavigate(images[currentIndex - 1]);
   };
 
-  const handleNext = (e) => {
+  const handleGoRight = (e) => {
     e.stopPropagation();
-    if (hasNext) onNavigate(images[currentIndex - 1]);
+    if (canGoRight) onNavigate(images[currentIndex + 1]);
   };
 
   return (
@@ -53,20 +53,20 @@ export default function LiveMonitor({ image, images, onNavigate }) {
       <div className="relative h-full w-full z-10 pointer-events-none">
         <div className="relative h-full w-full pointer-events-auto">
           {/* Navigation Arrows — Symmetrical within the visible space */}
-          {hasPrev && (
+          {canGoLeft && (
             <button
-              onClick={handlePrev}
+              onClick={handleGoLeft}
               className="absolute left-8 top-1/2 -translate-y-1/2 z-40 p-5 bg-black/40 hover:bg-white/20 backdrop-blur-xl border border-white/10 text-white rounded-full transition-all hover:scale-110 cursor-pointer group"
-              title="Previous (older)"
+              title="Previous"
             >
               <ChevronLeft size={36} className="group-active:scale-90 transition-transform" />
             </button>
           )}
-          {hasNext && (
+          {canGoRight && (
             <button
-              onClick={handleNext}
+              onClick={handleGoRight}
               className="absolute right-8 top-1/2 -translate-y-1/2 z-40 p-5 bg-black/40 hover:bg-white/20 backdrop-blur-xl border border-white/10 text-white rounded-full transition-all hover:scale-110 cursor-pointer group"
-              title="Next (newer)"
+              title="Next"
             >
               <ChevronRight size={36} className="group-active:scale-90 transition-transform" />
             </button>
