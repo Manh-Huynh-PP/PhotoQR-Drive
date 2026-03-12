@@ -103,3 +103,11 @@ Because of the backend requirement (`server.js`), host this application on a pla
 
 ### 🔒 Security Warning
 **NEVER** commit your `.env` or `*.json` keys to GitHub. Wait, don't worry, `.gitignore` is already taking care of it!
+
+---
+
+## 👨‍💻 Author
+
+**Manh Huynh**  
+- Website: [www.manhhuynh.work](https://www.manhhuynh.work)
+- Email: contact@manhhuynh.work
