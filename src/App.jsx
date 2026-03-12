@@ -37,7 +37,7 @@ function App() {
         initial={false}
         animate={{ width: isSidebarOpen ? 72 : 0 }}
         transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-        className="fixed inset-y-0 left-0 z-50 flex flex-col items-center py-4 glass-dark border-r border-white/5 bg-slate-950/50 backdrop-blur-2xl overflow-hidden"
+        className="hidden md:flex fixed inset-y-0 left-0 z-50 flex-col items-center py-4 glass-dark border-r border-white/5 bg-slate-950/50 backdrop-blur-2xl overflow-hidden"
       >
         {/* Nav Icons */}
         <nav className="flex flex-col items-center gap-3 mt-16">
@@ -62,7 +62,7 @@ function App() {
         initial={false}
         animate={{ left: isSidebarOpen ? 72 : 0 }}
         transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-        className="fixed top-6 z-[60]"
+        className="hidden md:block fixed top-6 z-[60]"
       >
         <button 
           onClick={() => setIsSidebarOpen(!isSidebarOpen)}
@@ -87,10 +87,10 @@ function App() {
             isSidebarOpen={isSidebarOpen} 
           />
         ) : (
-          <div className="pt-10 pb-20 px-10">
-            <header className="mb-12">
-              <h2 className="text-5xl font-black tracking-tight text-white mb-3">Photo Gallery</h2>
-              <p className="text-slate-500 text-lg">Explore the latest memories captured by PH-BOOTH</p>
+          <div className="pt-6 md:pt-10 pb-20 px-4 md:px-10 max-w-7xl mx-auto">
+            <header className="mb-6 md:mb-12">
+              <h2 className="text-3xl md:text-5xl font-black tracking-tight text-white mb-2 md:mb-3">Photo Gallery</h2>
+              <p className="text-slate-500 text-sm md:text-lg">Explore the latest memories captured</p>
             </header>
             <Gallery images={images} onSelect={(img) => setSelectedImage(img)} />
           </div>

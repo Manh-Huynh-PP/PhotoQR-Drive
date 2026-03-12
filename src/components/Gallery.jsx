@@ -28,7 +28,7 @@ export default function Gallery({ images, onSelect }) {
   }
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="md:p-6 space-y-4 md:space-y-6">
       {/* Toolbar */}
       <div className="flex items-center justify-between gap-4 flex-wrap">
         <div className="flex items-center gap-2">
@@ -48,7 +48,7 @@ export default function Gallery({ images, onSelect }) {
       </div>
 
       {/* Grid */}
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 md:gap-4">
         {paged.map((img) => (
           <div 
             key={img.id} 
