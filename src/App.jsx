@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { Grid, Monitor, AlertCircle, ChevronLeft, ChevronRight } from 'lucide-react';
 // eslint-disable-next-line no-unused-vars
 import { AnimatePresence, motion } from 'framer-motion';
@@ -16,12 +16,21 @@ function App() {
   const [selectedImage, setSelectedImage] = useState(null);
   const [liveImage, setLiveImage] = useState(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(() => window.innerWidth > 1024);
+  const [sortBy, setSortBy] = useState('newest');
 
   const { 
     images, 
     latestImage, 
     error, 
   } = useDriveFolder();
+
+  const sortedImages = useMemo(() => {
+    const arr = [...images];
+    if (sortBy === 'newest') arr.sort((a, b) => new Date(b.createdTime) - new Date(a.createdTime));
+    else if (sortBy === 'oldest') arr.sort((a, b) => new Date(a.createdTime) - new Date(b.createdTime));
+    else if (sortBy === 'name') arr.sort((a, b) => a.name.localeCompare(b.name));
+    return arr;
+  }, [images, sortBy]);
 
 
 
@@ -92,7 +101,12 @@ function App() {
               <h2 className="text-3xl md:text-5xl font-black tracking-tight text-white mb-2 md:mb-3">Photo Gallery</h2>
               <p className="text-slate-500 text-sm md:text-lg">Explore the latest memories captured</p>
             </header>
-            <Gallery images={images} onSelect={(img) => setSelectedImage(img)} />
+            <Gallery 
+              images={sortedImages} 
+              onSelect={(img) => setSelectedImage(img)} 
+              sortBy={sortBy}
+              onSortChange={setSortBy}
+            />
           </div>
         )}
       </motion.main>
@@ -102,7 +116,7 @@ function App() {
         {selectedImage && (
           <DetailedPreview 
             image={selectedImage}
-            images={images}
+            images={sortedImages}
             onNavigate={(img) => setSelectedImage(img)} 
             onClose={() => setSelectedImage(null)} 
             onBackToLive={handleBackToLive}

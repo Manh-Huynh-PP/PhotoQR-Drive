@@ -31,6 +31,13 @@ export default function DetailedPreview({ image, images = [], onNavigate, onClos
       <div className="relative w-full min-h-full md:h-full flex flex-col md:flex-row gap-0 md:gap-8 bg-slate-950 md:bg-transparent">
         {/* Main Image Area */}
         <div className="flex-1 relative flex items-center justify-center bg-black/40 md:rounded-3xl overflow-hidden glass min-h-[50vh] md:min-h-0">
+          
+          {/* Top Counter */}
+          {images.length > 0 && (
+            <div className="absolute top-4 right-4 md:top-6 md:right-6 z-50 px-3 py-1.5 bg-black/50 text-white/90 text-xs font-mono font-bold rounded-full backdrop-blur-md border border-white/10">
+              {currentIndex + 1} / {images.length}
+            </div>
+          )}
           <AnimatePresence mode="wait">
             <motion.div
               key={image.id}
@@ -66,23 +73,35 @@ export default function DetailedPreview({ image, images = [], onNavigate, onClos
             <ArrowLeft size={24} />
           </button>
 
+          {/* Swipe Hint Overlay (Mobile only, briefly visible) */}
+          <motion.div 
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0 }}
+            transition={{ delay: 0.5, duration: 1 }}
+            className="absolute bottom-6 left-1/2 -translate-x-1/2 z-40 px-4 py-2 bg-black/60 text-white/90 text-xs font-bold rounded-full backdrop-blur-md border border-white/10 pointer-events-none md:hidden"
+            style={{ animation: 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite' }}
+          >
+            ← Swipe to navigate →
+          </motion.div>
+
           {/* Navigation Arrows */}
           {hasPrev && (
             <button
               onClick={handlePrev}
-              className="absolute left-4 top-1/2 -translate-y-1/2 z-40 p-3 bg-black/40 hover:bg-white/20 backdrop-blur-xl border border-white/10 text-white rounded-full transition-all hover:scale-110 cursor-pointer hidden md:block"
+              className="absolute left-2 md:left-4 top-1/2 -translate-y-1/2 z-40 p-2 md:p-3 bg-black/40 hover:bg-white/20 backdrop-blur-xl border border-white/10 text-white rounded-full transition-all hover:scale-110 cursor-pointer"
               title="Previous (Older)"
             >
-              <ChevronLeft size={28} />
+              <ChevronLeft size={28} className="w-5 h-5 md:w-7 md:h-7" />
             </button>
           )}
           {hasNext && (
             <button
               onClick={handleNext}
-              className="absolute right-4 top-1/2 -translate-y-1/2 z-40 p-3 bg-black/40 hover:bg-white/20 backdrop-blur-xl border border-white/10 text-white rounded-full transition-all hover:scale-110 cursor-pointer hidden md:block"
+              className="absolute right-2 md:right-4 top-1/2 -translate-y-1/2 z-40 p-2 md:p-3 bg-black/40 hover:bg-white/20 backdrop-blur-xl border border-white/10 text-white rounded-full transition-all hover:scale-110 cursor-pointer"
               title="Next (Newer)"
             >
-              <ChevronRight size={28} />
+              <ChevronRight size={28} className="w-5 h-5 md:w-7 md:h-7" />
             </button>
           )}
         </div>

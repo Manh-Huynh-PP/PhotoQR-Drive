@@ -3,21 +3,12 @@ import { Download, Eye, ArrowUpDown, ChevronLeft, ChevronRight } from 'lucide-re
 
 const PAGE_SIZE = 12;
 
-export default function Gallery({ images, onSelect }) {
-  const [sortBy, setSortBy] = useState('newest'); // 'newest' | 'oldest' | 'name'
+export default function Gallery({ images, onSelect, sortBy, onSortChange }) {
   const [page, setPage] = useState(0);
 
-  const sorted = useMemo(() => {
-    const arr = [...images];
-    if (sortBy === 'newest') arr.sort((a, b) => new Date(b.createdTime) - new Date(a.createdTime));
-    else if (sortBy === 'oldest') arr.sort((a, b) => new Date(a.createdTime) - new Date(b.createdTime));
-    else if (sortBy === 'name') arr.sort((a, b) => a.name.localeCompare(b.name));
-    return arr;
-  }, [images, sortBy]);
-
-  const totalPages = Math.max(1, Math.ceil(sorted.length / PAGE_SIZE));
+  const totalPages = Math.max(1, Math.ceil(images.length / PAGE_SIZE));
   const safePage = Math.min(page, totalPages - 1);
-  const paged = sorted.slice(safePage * PAGE_SIZE, (safePage + 1) * PAGE_SIZE);
+  const paged = images.slice(safePage * PAGE_SIZE, (safePage + 1) * PAGE_SIZE);
 
   if (images.length === 0) {
     return (
@@ -35,7 +26,7 @@ export default function Gallery({ images, onSelect }) {
           <ArrowUpDown size={14} className="text-slate-500" />
           <select
             value={sortBy}
-            onChange={(e) => { setSortBy(e.target.value); setPage(0); }}
+            onChange={(e) => { onSortChange?.(e.target.value); setPage(0); }}
             className="bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-blue-500/40 cursor-pointer appearance-none"
           >
             <option value="newest">Newest First</option>
@@ -44,7 +35,7 @@ export default function Gallery({ images, onSelect }) {
           </select>
         </div>
 
-        <span className="text-xs text-slate-500 font-mono">{sorted.length} photos</span>
+        <span className="text-xs text-slate-500 font-mono">{images.length} photos</span>
       </div>
 
       {/* Grid */}
