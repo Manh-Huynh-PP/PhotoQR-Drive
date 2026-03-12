@@ -26,5 +26,4 @@ gen-lang-client-*.json
 *.njsproj
 *.sln
 *.sw?
-*.json
 photbooth.ai
