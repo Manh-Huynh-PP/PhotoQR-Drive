@@ -79,11 +79,19 @@ npm run server
 ```
 *(Mặc định chạy ở cổng 3001)*
 
-**Bật Frontend Console:**
+**Bật Frontend Console (Giao diện React):**
 ```bash
 npm run dev
 ```
 *(Mặc định chạy ở cổng 5173)*
+
+> 💡 **Mẹo chạy trên mạng LAN (để iPad/Điện thoại cùng WiFi xem được):**
+>
+> Sửa file `package.json` mục scripts: `"dev": "vite --host"` hoặc chạy thẳng lệnh:
+> ```bash
+> npm run dev -- --host
+> ```
+> Khi khởi chạy, Vite sẽ in ra một địa chỉ Network (VD: `http://192.168.1.100:5173`). Dùng thiết bị khác cùng lớp mạng truy cập vào link này để xem ảnh live!
 
 ## 📦 Build bản Production
 
@@ -194,11 +202,19 @@ npm run server
 ```
 *(Runs on port 3001 by default)*
 
-**Start the Frontend Console:**
+**Start the Frontend Console (React UI):**
 ```bash
 npm run dev
 ```
 *(Runs on port 5173 by default)*
+
+> 💡 **Tip: Viewing on an iPad/Phone over local Wi-Fi**
+>
+> Edit `package.json` scripts: `"dev": "vite --host"` or run:
+> ```bash
+> npm run dev -- --host
+> ```
+> Vite will print a `Network` address (e.g., `http://192.168.1.100:5173`). Open this link on any device connected to the same Wi-Fi network to view the photobooth live!
 
 ## 📦 Building for Production
 
