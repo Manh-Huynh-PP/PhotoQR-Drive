@@ -1,11 +1,25 @@
 import { useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { QRCodeSVG } from 'qrcode.react';
-import { Download, ExternalLink, ArrowLeft } from 'lucide-react';
+import { Download, ExternalLink, ArrowLeft, ChevronLeft, ChevronRight } from 'lucide-react';
 
-export default function DetailedPreview({ image, onClose, onBackToLive }) {
+export default function DetailedPreview({ image, images = [], onNavigate, onClose, onBackToLive }) {
   const [showQR, setShowQR] = useState(false);
   if (!image) return null;
+
+  const currentIndex = images.findIndex(img => img.id === image.id);
+  const hasPrev = currentIndex < images.length - 1; // prev is older
+  const hasNext = currentIndex > 0; // next is newer
+
+  const handlePrev = (e) => {
+    e?.stopPropagation();
+    if (hasPrev && onNavigate) onNavigate(images[currentIndex + 1]);
+  };
+
+  const handleNext = (e) => {
+    e?.stopPropagation();
+    if (hasNext && onNavigate) onNavigate(images[currentIndex - 1]);
+  };
 
   return (
     <motion.div 
@@ -17,17 +31,60 @@ export default function DetailedPreview({ image, onClose, onBackToLive }) {
       <div className="relative w-full min-h-full md:h-full flex flex-col md:flex-row gap-0 md:gap-8 bg-slate-950 md:bg-transparent">
         {/* Main Image Area */}
         <div className="flex-1 relative flex items-center justify-center bg-black/40 md:rounded-3xl overflow-hidden glass min-h-[50vh] md:min-h-0">
-          <img 
-            src={`/api/image/${image.id}`} 
-            alt={image.name} 
-            className="h-full w-full object-contain p-4 md:p-0"
-          />
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={image.id}
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 1.05 }}
+              transition={{ duration: 0.3 }}
+              drag="x"
+              dragConstraints={{ left: 0, right: 0 }}
+              dragElastic={0.7}
+              onDragEnd={(e, { offset }) => {
+                const swipe = offset.x; 
+                if (swipe < -50 && hasNext) {
+                  handleNext();
+                } else if (swipe > 50 && hasPrev) {
+                  handlePrev();
+                }
+              }}
+              className="absolute inset-0 flex items-center justify-center p-4 md:p-0 cursor-grab active:cursor-grabbing"
+            >
+              <img 
+                src={`/api/image/${image.id}`} 
+                alt={image.name} 
+                className="h-full w-full object-contain pointer-events-none"
+              />
+            </motion.div>
+          </AnimatePresence>
+          
           <button 
             onClick={onClose}
             className="absolute top-4 left-4 md:top-6 md:left-6 p-3 bg-black/50 hover:bg-black/70 rounded-full text-white transition-colors z-50"
           >
             <ArrowLeft size={24} />
           </button>
+
+          {/* Navigation Arrows */}
+          {hasPrev && (
+            <button
+              onClick={handlePrev}
+              className="absolute left-4 top-1/2 -translate-y-1/2 z-40 p-3 bg-black/40 hover:bg-white/20 backdrop-blur-xl border border-white/10 text-white rounded-full transition-all hover:scale-110 cursor-pointer hidden md:block"
+              title="Previous (Older)"
+            >
+              <ChevronLeft size={28} />
+            </button>
+          )}
+          {hasNext && (
+            <button
+              onClick={handleNext}
+              className="absolute right-4 top-1/2 -translate-y-1/2 z-40 p-3 bg-black/40 hover:bg-white/20 backdrop-blur-xl border border-white/10 text-white rounded-full transition-all hover:scale-110 cursor-pointer hidden md:block"
+              title="Next (Newer)"
+            >
+              <ChevronRight size={28} />
+            </button>
+          )}
         </div>
 
         {/* Sidebar */}

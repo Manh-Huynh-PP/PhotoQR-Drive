@@ -101,7 +101,9 @@ function App() {
       <AnimatePresence>
         {selectedImage && (
           <DetailedPreview 
-            image={selectedImage} 
+            image={selectedImage}
+            images={images}
+            onNavigate={(img) => setSelectedImage(img)} 
             onClose={() => setSelectedImage(null)} 
             onBackToLive={handleBackToLive}
           />
